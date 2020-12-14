@@ -276,6 +276,7 @@ export interface RemediationItemsFilter {
 }
 export interface RemediationItemAsset {
     account_id?: string;
+    applies_to_specific_assets?: boolean;
     asset_count?: number;
     audit_id?: string;
     created_on?: number;
@@ -345,6 +346,8 @@ export interface AssetQueryResultItem {
     description?: string;
     group_id?: string;
     group_name?: string;
+    groups?: string[];
+    groups_match?: 'any' | 'all';
     in_scope?: boolean;
     key?: string;
     modified_on?: number;

@@ -35,7 +35,10 @@ export interface AlResponderPlaybookParameter
     type?: string;
     immutable?: boolean;
     required?: boolean;
-    secret?: string;
+    secret?: boolean;
+    properties?: {
+        [key: string]: object;
+    };
 }
 
 export interface AlResponderWorkflowContext
@@ -47,11 +50,11 @@ export interface AlResponderWorkflowContext
 
 export interface AlResponderWorkflowActionWhen
 {
-    containerId ?: string; // this is for ui not for wf it self
-    containerIdList?: string[];
+    x_alertlogic_condition_name ?: string; // this is not stack storm, just a way to identify conditions in ui side
     when ?: string;
     whenId?: string;
     do?: string[]; // many do add an array
+    doOut?: string[];
     publish ?: {[key: string]: string}[];
 }
 
@@ -78,7 +81,9 @@ export interface AlResponderWorkflowTask {
 export interface AlResponderWorkflow extends AlResponderWorkflowContext{
     version ?: number; // The version of the spec being used in this workflow DSL.
     description ?: string; // The description of the workflow.
-    tasks ?: AlResponderWorkflowTask;
+    tasks ?: {
+        [key:string]:AlResponderWorkflowTask;
+    };
 }
 
 export interface AlResponderPlaybook {
@@ -110,6 +115,22 @@ export interface AlResponderExecution extends AlResponderExecutionCommon{
     playbook_id ?: string;
     type ?: string;
     account_id ?: string;
+}
+
+export interface AlResponderExecutionsHistory extends AlResponderExecutionCommon{
+    id ?: string;
+    task_id	?: string;
+    task_name ?: string;
+    parent_execution_id ?: string;
+    playbook_type ?: string;
+    type ?: string;
+    playbook_id ?: string;
+    playbook_name ?: string;
+    native_id ?: string;
+    parameters ?: unknown;
+    action ?: unknown;
+    modified ?: AlChangeStamp;
+    created ?: AlChangeStamp;
 }
 
 export interface AlResponderExecutionSummary {
@@ -145,6 +166,22 @@ export interface AlResponderExecutionResult extends AlResponderExecutionCommon {
     log ?: AlResponderExecutionResultLog[];
 }
 
+export interface AlResponderExecutionsHistoryResultSummary {
+    deployments ?: {[key: string]: number}[];
+    statuses ?: {[key: string]: number}[];
+    playbook_types ?: {[key: string]: number}[];
+    playbook_ids ?: {[key: string]: number}[];
+    playbook_names ?: {[key: string]: number}[];
+    taksk ?: unknown[];
+}
+
+export interface AlResponderExecutionsHistoryResult {
+    count: number;// minimum 0,
+    marker: string;
+    executions: AlResponderExecutionsHistory[];
+    summary: AlResponderExecutionsHistoryResultSummary;
+}
+
 export interface AlResponderExecutionQueryParams{
     limit ?: number;
     offset ?: number;
@@ -156,6 +193,25 @@ export interface AlResponderExecutionQueryParams{
     start_timestamp ?: string;
     end_timestamp ?: string;
     type ?: string;
+}
+
+export interface AlResponderExecutionsHistoryQueryParams{
+    execution_type: string;
+    limit ?: number;// default: 50 minimum: 10 maximum: 100
+    marker ?: string;
+    sort_by ?: 'start_timestamp' | 'end_timestamp';
+    sort_order ?:  'asc' | 'desc';
+    status ?: string;
+    start_timestamp ?: string;
+    end_timestamp ?: string;
+    filter ?: {
+        taks_id ?: string;
+        task_name ?: string;
+        playbook_id ?: string;
+        parent_execution_id ?: string;
+        native_id ?: string;
+        status ?: status;
+    };
 }
 
 export interface AlResponderSchema{
@@ -186,3 +242,5 @@ export interface AlResponderSchemaDetail{
         [key: string]: AlResponderSchemaDetailProperty;
     };
 }
+
+export type status = "new" | "requested" | "scheduled" | "delayed" | "running" | "succeeded" | "failed" | "timeout" | "canceled";

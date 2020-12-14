@@ -7,7 +7,15 @@ import {
     AlLocation
 } from '@al/core';
 import {
-    AlResponderPlaybook, AlResponderAction, AlResponderExecutions, AlResponderInspectorError, AlResponderExecutionResult, AlResponderExecutionQueryParams, AlResponderSchema, AlResponderSchemaDetail
+    AlResponderPlaybook,
+    AlResponderAction,
+    AlResponderExecutions,
+    AlResponderInspectorError,
+    AlResponderExecutionResult,
+    AlResponderExecutionQueryParams,
+    AlResponderSchema,
+    AlResponderExecutionsHistoryResult,
+    AlResponderExecutionsHistoryQueryParams
 } from './types';
 
 export class AlResponderClientInstance {
@@ -54,7 +62,7 @@ export class AlResponderClientInstance {
      * @remarks
      *
      * */
-    async getPlaybookById(accountId: string, id: string) {
+    async getPlaybookById(accountId: string, id: string): Promise<AlResponderPlaybook> {
         return this.client.get<AlResponderPlaybook>({
             version: this.serviceVersion,
             service_stack: this.serviceStack,
@@ -167,7 +175,7 @@ export class AlResponderClientInstance {
      * @remarks
      *
      * */
-    async getExecutions(accountId: string, params: AlResponderExecutionQueryParams) {
+    async getExecutions(accountId: string, params: AlResponderExecutionQueryParams): Promise<AlResponderExecutions> {
         return this.client.get<AlResponderExecutions>({
             version: this.serviceVersion,
             service_stack: this.serviceStack,
@@ -216,12 +224,35 @@ export class AlResponderClientInstance {
      * @remarks
      *
      * */
-    async getExecutionResults(accountId: string, executionId: string) {
+    async getExecutionResults(accountId: string, executionId: string): Promise<AlResponderExecutionResult> {
         return this.client.get<AlResponderExecutionResult>({
             version: this.serviceVersion,
             service_stack: this.serviceStack,
             account_id: accountId,
             path: `/executions/${executionId}`,
+        });
+    }
+
+    /**
+     * Get execution results
+     * GET
+     * /v1/{account_id}/executions/history
+     * https://responder.mdr.global.alertlogic.com
+     *
+     * @param accountId AIMS Account ID
+     * @param params AlResponderExecutionQueryParams params
+     * @returns Execution history list
+     *
+     * @remarks
+     *
+     * */
+    async getExecutionsHistory(accountId: string, payload: AlResponderExecutionsHistoryQueryParams): Promise<AlResponderExecutionsHistoryResult> {
+        return this.client.post<AlResponderExecutionsHistoryResult>({
+            data: payload,
+            version: this.serviceVersion,
+            service_stack: this.serviceStack,
+            account_id: accountId,
+            path: `/executions/history`
         });
     }
 
@@ -262,7 +293,7 @@ export class AlResponderClientInstance {
      * @remarks
      *
      * */
-    async getSchema(accountId: string) {
+    async getSchema(accountId: string): Promise<AlResponderSchema[]> {
         return this.client.get<AlResponderSchema[]>({
             version: this.serviceVersion,
             service_stack: this.serviceStack,
@@ -284,7 +315,7 @@ export class AlResponderClientInstance {
      * @remarks
      *
      * */
-    async getSchemaByType(accountId: string, dataType: string) {
+    async getSchemaByType(accountId: string, dataType: string): Promise<AlResponderSchema> {
         return this.client.get<AlResponderSchema>({
             version: this.serviceVersion,
             service_stack: this.serviceStack,
