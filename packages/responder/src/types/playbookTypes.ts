@@ -100,15 +100,26 @@ export interface AlResponderPlaybook {
     workflow ?: AlResponderWorkflow;
 }
 
-export interface AlResponderExecutionCommon{
+export interface AlResponderExecutionResult {
+    output ?: unknown;
+    exit_code ?: number;
+    result ?: unknown;
+    stdout ?: string;
+    stderr ?: string;
+}
+
+export interface AlResponderExecutionCommon {
     status ?: string;
     start_timestamp ?: string;
     elapsed_seconds ?: number;
     end_timestamp ?: string;
-    result ?: object;
+    result ?: AlResponderExecutionResult;
+    modified ?: AlChangeStamp;
+    created ?: AlChangeStamp;
+    parameters ?: unknown;
 }
 
-export interface AlResponderExecution extends AlResponderExecutionCommon{
+export interface AlResponderExecution extends AlResponderExecutionCommon {
     id ?: string;
     modified ?: AlChangeStamp;
     created ?: AlChangeStamp;
@@ -117,7 +128,7 @@ export interface AlResponderExecution extends AlResponderExecutionCommon{
     account_id ?: string;
 }
 
-export interface AlResponderExecutionsHistory extends AlResponderExecutionCommon{
+export interface AlResponderExecutionsHistory extends AlResponderExecutionCommon {
     id ?: string;
     task_id	?: string;
     task_name ?: string;
@@ -127,10 +138,7 @@ export interface AlResponderExecutionsHistory extends AlResponderExecutionCommon
     playbook_id ?: string;
     playbook_name ?: string;
     native_id ?: string;
-    parameters ?: unknown;
     action ?: unknown;
-    modified ?: AlChangeStamp;
-    created ?: AlChangeStamp;
 }
 
 export interface AlResponderExecutionSummary {
@@ -201,16 +209,15 @@ export interface AlResponderExecutionsHistoryQueryParams{
     marker ?: string;
     sort_by ?: 'start_timestamp' | 'end_timestamp';
     sort_order ?:  'asc' | 'desc';
-    status ?: string;
     start_timestamp ?: string;
     end_timestamp ?: string;
     filter ?: {
         taks_id ?: string;
         task_name ?: string;
-        playbook_id ?: string;
+        playbook_id ?: string | string[];
         parent_execution_id ?: string;
         native_id ?: string;
-        status ?: status;
+        status ?: string | string[];
     };
 }
 
@@ -244,3 +251,5 @@ export interface AlResponderSchemaDetail{
 }
 
 export type status = "new" | "requested" | "scheduled" | "delayed" | "running" | "succeeded" | "failed" | "timeout" | "canceled";
+
+export type AlResponderPlaybookType = 'incident' | 'observation' | 'exposure' | 'remediation';
