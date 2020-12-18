@@ -15,7 +15,8 @@ import {
     AlResponderExecutionQueryParams,
     AlResponderSchema,
     AlResponderExecutionsHistoryResult,
-    AlResponderExecutionsHistoryQueryParams
+    AlResponderExecutionsHistoryQueryParams,
+    AlResponderExecutionRequest
 } from './types';
 
 export class AlResponderClientInstance {
@@ -197,11 +198,7 @@ export class AlResponderClientInstance {
      * @remarks
      */
     async createExecution(accountId: string,
-        payload: {
-            type: string;
-            payload: object;
-            playbook_id: string
-          }): Promise<AlResponderExecutions> {
+        payload: AlResponderExecutionRequest): Promise<AlResponderExecutions> {
         return this.client.post<AlResponderExecutions>({
             version: this.serviceVersion,
             service_stack: this.serviceStack,
@@ -212,7 +209,6 @@ export class AlResponderClientInstance {
     }
 
      /**
-     * Get execution results
      * GET
      * /v1/{account_id}/executions/{id}/result
      * https://responder.mdr.global.alertlogic.com
@@ -224,7 +220,7 @@ export class AlResponderClientInstance {
      * @remarks
      *
      * */
-    async getExecutionResults(accountId: string, executionId: string): Promise<AlResponderExecutionResult> {
+    async getExecutionResult(accountId: string, executionId: string): Promise<AlResponderExecutionResult> {
         return this.client.get<AlResponderExecutionResult>({
             version: this.serviceVersion,
             service_stack: this.serviceStack,
@@ -234,7 +230,6 @@ export class AlResponderClientInstance {
     }
 
     /**
-     * Get execution results
      * GET
      * /v1/{account_id}/executions/history
      * https://responder.mdr.global.alertlogic.com

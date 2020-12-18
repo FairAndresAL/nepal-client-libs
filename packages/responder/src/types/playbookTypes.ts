@@ -100,7 +100,7 @@ export interface AlResponderPlaybook {
     workflow ?: AlResponderWorkflow;
 }
 
-export interface AlResponderExecutionResult {
+export interface AlResponderExecutionCommonResult {
     output ?: unknown;
     exit_code ?: number;
     result ?: unknown;
@@ -109,18 +109,19 @@ export interface AlResponderExecutionResult {
 }
 
 export interface AlResponderExecutionCommon {
+    id: string;
+    native_id ?: string;
     status ?: string;
     start_timestamp ?: string;
     elapsed_seconds ?: number;
     end_timestamp ?: string;
-    result ?: AlResponderExecutionResult;
+    result ?: AlResponderExecutionCommonResult;
     modified ?: AlChangeStamp;
     created ?: AlChangeStamp;
     parameters ?: unknown;
 }
 
 export interface AlResponderExecution extends AlResponderExecutionCommon {
-    id ?: string;
     modified ?: AlChangeStamp;
     created ?: AlChangeStamp;
     playbook_id ?: string;
@@ -129,7 +130,6 @@ export interface AlResponderExecution extends AlResponderExecutionCommon {
 }
 
 export interface AlResponderExecutionsHistory extends AlResponderExecutionCommon {
-    id ?: string;
     task_id	?: string;
     task_name ?: string;
     parent_execution_id ?: string;
@@ -248,6 +248,16 @@ export interface AlResponderSchemaDetail{
     properties ?: {
         [key: string]: AlResponderSchemaDetailProperty;
     };
+}
+
+export interface AlResponderExecutionRequest{
+    payload: {
+        type?: 'action' | 'incident' | 'observation';
+        parameters?: {[key: string]: unknown};
+        incident?: {[key: string]: unknown};
+        observation?: {[key: string]: unknown};
+    };
+    playbook_id: string;
 }
 
 export type status = "new" | "requested" | "scheduled" | "delayed" | "running" | "succeeded" | "failed" | "timeout" | "canceled";
