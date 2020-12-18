@@ -58,7 +58,7 @@ export class AlKalmClientInstance implements AlValidationSchemaProvider {
       params: queryParams,
       validation: {
         providers: this,
-        schema: 'https://alertlogic.com/schematics/kalm'
+        schema: 'https://alertlogic.com/schematics/kalm#definitions/queryResponse'
       }
     });
   }
